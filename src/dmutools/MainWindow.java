@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -154,6 +153,11 @@ public class MainWindow extends javax.swing.JFrame {
         jMenu1.add(jMIOpenNewTm);
 
         jMIOpenOrigTm.setText("Öppna ursprungstm");
+        jMIOpenOrigTm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIOpenOrigTmActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMIOpenOrigTm);
 
         jMIOpenListFromProgram.setText("Scanna program");
@@ -204,6 +208,10 @@ public class MainWindow extends javax.swing.JFrame {
         scanProgramFile();
     }//GEN-LAST:event_jMIOpenListFromProgramActionPerformed
 
+    private void jMIOpenOrigTmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIOpenOrigTmActionPerformed
+        openOrigTm();
+    }//GEN-LAST:event_jMIOpenOrigTmActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -220,19 +228,14 @@ public class MainWindow extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new MainWindow().setVisible(true);
             }
@@ -265,14 +268,14 @@ public class MainWindow extends javax.swing.JFrame {
         JFileChooser jfc = new JFileChooser();
         int jfcResult = jfc.showOpenDialog(null);
         if (jfcResult == JFileChooser.APPROVE_OPTION) {
-            newTmList = readNewTmFile(jfc.getSelectedFile());
+            newTmList = readTmFile(jfc.getSelectedFile());
             for ( String line : newTmList) {
                 jTANewTm.append(line + "\n");
             }
         }
     }
 
-    private ArrayList<String> readNewTmFile(File selectedFile) {
+    private ArrayList<String> readTmFile(File selectedFile) {
         ArrayList<String> stringList = new ArrayList<>();
         try {
             try (BufferedReader reader = Files.newBufferedReader( selectedFile.toPath() , Charset.defaultCharset())) {
@@ -289,14 +292,13 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private void scanProgramFile() {
-        ArrayList<String> programEventList;
+        DmuProgram dmuProgram = new DmuProgram();
+        
         JFileChooser jfc = new JFileChooser();
         int jfcResult = jfc.showOpenDialog(null);
         if (jfcResult == JFileChooser.APPROVE_OPTION) {
-            programEventList = readProgramEvents(jfc.getSelectedFile());
-            for ( String line : programEventList ) {
-                jTAProgram.append(line + "\n");
-            }
+            dmuProgram.readFile( jfc.getSelectedFile() );
+            dmuProgram.sendToTextArea( jTAProgram );
         }
 
     }
@@ -320,4 +322,18 @@ public class MainWindow extends javax.swing.JFrame {
             return null;
         }
     }
+
+    private void openOrigTm() {
+        ArrayList<String> origTmList;
+        JFileChooser jfc = new JFileChooser();
+        int jfcResult = jfc.showOpenDialog(null);
+        if (jfcResult == JFileChooser.APPROVE_OPTION) {
+            origTmList = readTmFile(jfc.getSelectedFile());
+            for ( String line : origTmList) {
+                jTAOrigTm.append(line + "\n");
+            }
+        }
+
+    }
+
 }
