@@ -6,6 +6,17 @@
 
 package dmutools;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+
 /**
  *
  * @author mats
@@ -44,6 +55,7 @@ public class MainWindow extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMIOpenNewTm = new javax.swing.JMenuItem();
         jMIOpenOrigTm = new javax.swing.JMenuItem();
+        jMIOpenListFromProgram = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -109,6 +121,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTAProgram.setColumns(20);
         jTAProgram.setRows(5);
+        jTAProgram.setDragEnabled(true);
         jScrollPane3.setViewportView(jTAProgram);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -133,10 +146,23 @@ public class MainWindow extends javax.swing.JFrame {
         jMenu1.setText("Arkiv");
 
         jMIOpenNewTm.setText("Öppna ny tm");
+        jMIOpenNewTm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIOpenNewTmActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMIOpenNewTm);
 
         jMIOpenOrigTm.setText("Öppna ursprungstm");
         jMenu1.add(jMIOpenOrigTm);
+
+        jMIOpenListFromProgram.setText("Scanna program");
+        jMIOpenListFromProgram.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMIOpenListFromProgramActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMIOpenListFromProgram);
 
         jMenuBar1.add(jMenu1);
 
@@ -169,6 +195,14 @@ public class MainWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jMIOpenNewTmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIOpenNewTmActionPerformed
+        openNewTm();
+    }//GEN-LAST:event_jMIOpenNewTmActionPerformed
+
+    private void jMIOpenListFromProgramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMIOpenListFromProgramActionPerformed
+        scanProgramFile();
+    }//GEN-LAST:event_jMIOpenListFromProgramActionPerformed
 
     /**
      * @param args the command line arguments
@@ -209,6 +243,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JMenuItem jMIOpenListFromProgram;
     private javax.swing.JMenuItem jMIOpenNewTm;
     private javax.swing.JMenuItem jMIOpenOrigTm;
     private javax.swing.JMenu jMenu1;
@@ -224,4 +259,65 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextArea jTAOrigTm;
     private javax.swing.JTextArea jTAProgram;
     // End of variables declaration//GEN-END:variables
+
+    private void openNewTm() {
+        ArrayList<String> newTmList;
+        JFileChooser jfc = new JFileChooser();
+        int jfcResult = jfc.showOpenDialog(null);
+        if (jfcResult == JFileChooser.APPROVE_OPTION) {
+            newTmList = readNewTmFile(jfc.getSelectedFile());
+            for ( String line : newTmList) {
+                jTANewTm.append(line + "\n");
+            }
+        }
+    }
+
+    private ArrayList<String> readNewTmFile(File selectedFile) {
+        ArrayList<String> stringList = new ArrayList<>();
+        try {
+            try (BufferedReader reader = Files.newBufferedReader( selectedFile.toPath() , Charset.defaultCharset())) {
+                String line;
+                while (( line = reader.readLine()) != null ) {
+                    stringList.add(line);
+                }
+            }
+            return stringList;
+        } catch (IOException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    private void scanProgramFile() {
+        ArrayList<String> programEventList;
+        JFileChooser jfc = new JFileChooser();
+        int jfcResult = jfc.showOpenDialog(null);
+        if (jfcResult == JFileChooser.APPROVE_OPTION) {
+            programEventList = readProgramEvents(jfc.getSelectedFile());
+            for ( String line : programEventList ) {
+                jTAProgram.append(line + "\n");
+            }
+        }
+
+    }
+
+    private ArrayList<String> readProgramEvents(File selectedFile) {
+        ArrayList<String> stringList = new ArrayList<>();
+        try {
+            try (BufferedReader reader = Files.newBufferedReader( selectedFile.toPath() , Charset.defaultCharset())) {
+                String line;
+                while (( line = reader.readLine()) != null ) {
+                    if ( line.matches(".*\\(.*\\).*")) {
+                        stringList.add(line);
+                    } else if ( line.matches(".*T.*")) {
+                        stringList.add(line);
+                    }
+                }
+            }
+            return stringList;
+        } catch (IOException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
 }

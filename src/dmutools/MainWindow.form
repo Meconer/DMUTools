@@ -13,11 +13,22 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#xd6;ppna ny tm"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMIOpenNewTmActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMIOpenOrigTm">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#xd6;ppna ursprungstm"/>
               </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMIOpenListFromProgram">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Scanna program"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMIOpenListFromProgramActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -216,6 +227,7 @@
               <Properties>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="rows" type="int" value="5"/>
+                <Property name="dragEnabled" type="boolean" value="true"/>
               </Properties>
             </Component>
           </SubComponents>
