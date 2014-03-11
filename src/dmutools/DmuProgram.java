@@ -14,6 +14,8 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JTextArea;
 
 /**
@@ -33,7 +35,8 @@ public class DmuProgram {
             try (BufferedReader reader = Files.newBufferedReader( fileToRead.toPath() , Charset.defaultCharset())) {
                 String line;
                 while (( line = reader.readLine()) != null ) {
-                    programLines.add(line);
+                    String comment = extractComment(line);
+                    if (comment != null ) programLines.add( comment );
                 }
             }
         } catch (IOException ex) {
@@ -42,10 +45,18 @@ public class DmuProgram {
         
     }
 
-    void sendToTextArea(JTextArea jTAProgram) {
+    public void sendToTextArea(JTextArea jTAProgram) {
         for ( String line : programLines ) {
             jTAProgram.append(line + "\n" );
         }
         
+    }
+
+    private String extractComment(String line) {
+        final String commentMatch = ".*\\((.*)\\)";
+        Pattern p = Pattern.compile(commentMatch);
+        Matcher m = p.matcher(line);
+        if (m.find()) return m.group(1).trim();
+        return null;
     }
 }
