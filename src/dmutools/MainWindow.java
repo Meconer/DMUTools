@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 
 /**
@@ -21,11 +22,13 @@ import javax.swing.JFileChooser;
  * @author mats
  */
 public class MainWindow extends javax.swing.JFrame {
+    DefaultListModel<String> dmuListModel = new DefaultListModel<String>();
 
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
+        
         initComponents();
     }
 
@@ -48,8 +51,8 @@ public class MainWindow extends javax.swing.JFrame {
         jTAOrigTm = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTAProgram = new javax.swing.JTextArea();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jLDMUList = new javax.swing.JList();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMIOpenNewTm = new javax.swing.JMenuItem();
@@ -118,10 +121,9 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel3.setText("Lista från program");
 
-        jTAProgram.setColumns(20);
-        jTAProgram.setRows(5);
-        jTAProgram.setDragEnabled(true);
-        jScrollPane3.setViewportView(jTAProgram);
+        jLDMUList.setModel(dmuListModel);
+        jLDMUList.setDragEnabled(true);
+        jScrollPane4.setViewportView(jLDMUList);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -130,8 +132,8 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                .addContainerGap(302, Short.MAX_VALUE))
+            .addComponent(jScrollPane4)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,7 +141,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3))
+                .addComponent(jScrollPane4))
         );
 
         jMenu1.setText("Arkiv");
@@ -243,6 +245,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList jLDMUList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -257,10 +260,9 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea jTANewTm;
     private javax.swing.JTextArea jTAOrigTm;
-    private javax.swing.JTextArea jTAProgram;
     // End of variables declaration//GEN-END:variables
 
     private void openNewTm() {
@@ -298,7 +300,8 @@ public class MainWindow extends javax.swing.JFrame {
         int jfcResult = jfc.showOpenDialog(null);
         if (jfcResult == JFileChooser.APPROVE_OPTION) {
             dmuProgram.readFile( jfc.getSelectedFile() );
-            dmuProgram.sendToTextArea( jTAProgram );
+            
+            dmuProgram.sendToList(dmuListModel);
         }
 
     }

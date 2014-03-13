@@ -16,6 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JTextArea;
 
 /**
@@ -51,9 +53,8 @@ public class DmuProgram {
         for ( String line : programLines ) {
             jTAProgram.append(line + "\n" );
         }
-        
     }
-
+    
     private String extractComment(String line) {
         final String commentMatch = ".*\\((.*)\\)";
         Pattern p = Pattern.compile(commentMatch);
@@ -70,4 +71,11 @@ public class DmuProgram {
         if (m.find()) return m.group(1).trim();
         return null;
     }
+
+    void sendToList(DefaultListModel<String> dmuListModel) {
+        for ( String line : programLines ) {
+            dmuListModel.addElement(line+"\n");
+        }
+    }
+
 }
