@@ -12,12 +12,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
-import javax.swing.JList;
 import javax.swing.JTextArea;
 
 /**
@@ -26,6 +27,7 @@ import javax.swing.JTextArea;
  */
 public class DmuProgram {
     ArrayList<String> programLines;
+    Set<Integer> toolSet = new LinkedHashSet<>();
 
     public DmuProgram() {
         programLines = new ArrayList<>();
@@ -40,13 +42,16 @@ public class DmuProgram {
                     String comment = extractComment(line);
                     if (comment != null ) programLines.add( comment );
                     String tool = extractTool(line);
-                    if (tool != null ) programLines.add( tool );
+                    if (tool != null ) {
+                        programLines.add( tool );
+                        toolSet.add(Integer.parseInt(tool.substring(1)));
+                    }
                 }
             }
         } catch (IOException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        System.out.println(toolSet);
     }
 
     public void sendToTextArea(JTextArea jTAProgram) {
@@ -56,7 +61,7 @@ public class DmuProgram {
     }
     
     private String extractComment(String line) {
-        final String commentMatch = ".*\\((.*)\\)";
+        final String commentMatch = ".*(\\(.*\\))";
         Pattern p = Pattern.compile(commentMatch);
         Matcher m = p.matcher(line);
         if (m.find()) return m.group(1).trim();
@@ -72,10 +77,44 @@ public class DmuProgram {
         return null;
     }
 
-    void sendToList(DefaultListModel<String> dmuListModel) {
+    void sendToProgramEventList(DefaultListModel<String> dmuListModel) {
         for ( String line : programLines ) {
-            dmuListModel.addElement(line+"\n");
+            dmuListModel.addElement(line);
         }
     }
+
+    void appendToolListFromProgramEvents(JTextArea textArea) {
+        int counter = 1;
+        for ( int toolNo : toolSet ) {
+            textArea.append("P" + toolNumberToPlaceNumber(counter) + " T" + toolNo + " L0 R0 \n") ;
+            counter++;
+        }
+    }
+
+    // The dmu 50 uses two magazine chains. The tools are placed in this order:
+    // Tool Place
+    // ==========
+    //   1    2
+    //   2    17
+    //   3    3
+    //   4    18
+    //   5    4
+    //   6    19
+    //   7    5
+    //   8    20
+    // and so on.
+    private int toolNumberToPlaceNumber(int toolNumber) {
+        if ( isOdd(toolNumber) ) {
+            return 2 + toolNumber / 2;
+        } else {
+            return 16 + toolNumber / 2;
+        }
+    }
+
+    // Returns true if number is odd.
+    private boolean isOdd(int n) {
+        return   n % 2 != 0 ;
+    }
+    
 
 }
