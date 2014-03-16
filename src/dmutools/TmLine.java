@@ -15,15 +15,19 @@ import java.util.regex.Pattern;
  */
 class TmLine {
     String line;
+    int placeNo;
     int toolNo;
     String lValue;
     String rValue;
+    String comment;
 
     TmLine(String line) {
         this.line = line;
+        readPlaceNo();
         readToolNo();
         readLValue();
         readRValue();
+        readComment();
     }
 
     int readToolNo() {
@@ -33,8 +37,22 @@ class TmLine {
         Matcher m = p.matcher(line);
         if (m.find()) {
             String toolString = m.group(1).trim();
-            int tNo = Integer.parseInt(toolString);
-            return tNo;
+            toolNo = Integer.parseInt(toolString);
+            return toolNo;
+        }
+        return -2;
+        
+    }
+
+    int readPlaceNo() {
+        if (line == null ) return -1;
+        final String placeMatch = "P(\\d+)";
+        Pattern p = Pattern.compile(placeMatch);
+        Matcher m = p.matcher(line);
+        if (m.find()) {
+            String placeString = m.group(1).trim();
+            placeNo = Integer.parseInt(placeString);
+            return placeNo;
         }
         return -2;
         
@@ -75,9 +93,25 @@ class TmLine {
     }
 
     String getLine() {
-        line = line.replaceAll("L\\d*\\.?\\d*" , "L"+lValue);
-        line = line.replaceAll("R\\d*\\.?\\d*" , "R"+rValue);
+        line = "P" + placeNo +
+               " T" + toolNo + 
+               " L" + lValue +
+               " R" + rValue + 
+               " " + comment;
+               
         return line;
+    }
+
+    public String readComment() {
+        if (line == null ) return null;
+        final String commentMatch = "(\\(.*\\))";
+        Pattern p = Pattern.compile(commentMatch);
+        Matcher m = p.matcher(line);
+        if (m.find()) {
+            comment = m.group(1).trim();
+            return comment;
+        }
+        return "";
     }
     
 }
