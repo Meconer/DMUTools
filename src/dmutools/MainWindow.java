@@ -17,10 +17,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
+import javax.swing.DropMode;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -33,7 +32,8 @@ public class MainWindow extends javax.swing.JFrame {
     ArrayList<String> measuredTmList;
     ArrayList<String> origTmList;
     
-    DefaultListModel<String> dmuListModel = new DefaultListModel<>();
+    
+
 
     /**
      * Creates new form MainWindow
@@ -41,6 +41,18 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow() {
         
         initComponents();
+        jLDMUList.setModel(dmuProgram.programLines);
+        DmuTransferHandler dmuTransferHandler = new DmuTransferHandler();
+        dmuTransferHandler.setDmuProgram(dmuProgram);
+        jLDMUList.setTransferHandler(dmuTransferHandler);
+        jLDMUList.setDragEnabled(true);
+        jLDMUList.setDropMode(DropMode.ON_OR_INSERT);
+        
+        jTANewTm.setTransferHandler(new TmHandler());
+        jTANewTm.setDragEnabled(true);
+        
+        jTAOrigTm.setTransferHandler(new TmHandler());
+        jTAOrigTm.setDragEnabled(true);
     }
 
     /**
@@ -168,7 +180,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel3.setText("Lista från program");
 
-        jLDMUList.setModel(dmuListModel);
         jLDMUList.setDragEnabled(true);
         jScrollPane4.setViewportView(jLDMUList);
 
@@ -395,7 +406,6 @@ public class MainWindow extends javax.swing.JFrame {
         if (jfcResult == JFileChooser.APPROVE_OPTION) {
             dmuProgram.readFile( jfc.getSelectedFile() );
             
-            dmuProgram.sendToProgramEventList(dmuListModel);
         }
 
     }
@@ -438,6 +448,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void enterMeasuredValues() {
         readOrigTmListFromTA();
+        readMeasuredTmListFromTA();
         if ( measuredTmList == null ) return;
         for ( String line : measuredTmList ) {
             TmLine tmLine = new TmLine( line );
@@ -510,6 +521,15 @@ public class MainWindow extends javax.swing.JFrame {
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Kunde inte spara offsetfilen. " + ex.getMessage());
             }
+        }
+    }
+
+    private void readMeasuredTmListFromTA() {
+        measuredTmList = new ArrayList<>();
+        String text = jTANewTm.getText();
+        String[] textArr = text.split("\n");
+        for (String line : textArr) {
+            measuredTmList.add(line);
         }
     }
 

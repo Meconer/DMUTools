@@ -26,24 +26,25 @@ import javax.swing.JTextArea;
  * @author mats
  */
 public class DmuProgram {
-    ArrayList<String> programLines;
+    DefaultListModel<String> programLines;
     Set<Integer> toolSet = new LinkedHashSet<>();
+    
 
     public DmuProgram() {
-        programLines = new ArrayList<>();
+        programLines = new DefaultListModel<>();
     }
     
     public void readFile(File fileToRead){
         programLines.clear();
         try {
-            try (BufferedReader reader = Files.newBufferedReader( fileToRead.toPath() , Charset.defaultCharset())) {
+            try (BufferedReader reader = Files.newBufferedReader( fileToRead.toPath() , Charset.forName("ISO_8859_1"))) {
                 String line;
                 while (( line = reader.readLine()) != null ) {
                     String comment = extractComment(line);
-                    if (comment != null ) programLines.add( comment );
+                    if (comment != null ) programLines.add( programLines.size(), comment );
                     String tool = extractTool(line);
                     if (tool != null ) {
-                        programLines.add( tool );
+                        programLines.add( programLines.size(), tool );
                         toolSet.add(Integer.parseInt(tool.substring(1)));
                     }
                 }
@@ -54,12 +55,6 @@ public class DmuProgram {
         System.out.println(toolSet);
     }
 
-    public void sendToTextArea(JTextArea jTAProgram) {
-        for ( String line : programLines ) {
-            jTAProgram.append(line + "\n" );
-        }
-    }
-    
     private String extractComment(String line) {
         final String commentMatch = ".*(\\(.*\\))";
         Pattern p = Pattern.compile(commentMatch);
@@ -75,12 +70,6 @@ public class DmuProgram {
         Matcher m = p.matcher(line);
         if (m.find()) return m.group(1).trim();
         return null;
-    }
-
-    void sendToProgramEventList(DefaultListModel<String> dmuListModel) {
-        for ( String line : programLines ) {
-            dmuListModel.addElement(line);
-        }
     }
 
     void appendToolListFromProgramEvents(JTextArea textArea) {
