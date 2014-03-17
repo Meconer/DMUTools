@@ -103,7 +103,8 @@ class TmLine {
     }
 
     public String readComment() {
-        if (line == null ) return null;
+        comment = "";
+        if (line == null ) return "";
         final String commentMatch = "(\\(.*\\))";
         Pattern p = Pattern.compile(commentMatch);
         Matcher m = p.matcher(line);
