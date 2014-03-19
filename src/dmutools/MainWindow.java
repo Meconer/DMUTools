@@ -48,6 +48,8 @@ public class MainWindow extends javax.swing.JFrame {
         jLDMUList.setDragEnabled(true);
         jLDMUList.setDropMode(DropMode.ON_OR_INSERT);
         
+        jLHolders.setDropMode(DropMode.ON_OR_INSERT);
+        
         jTANewTm.setTransferHandler(new TmHandler());
         jTANewTm.setDragEnabled(true);
         
@@ -80,7 +82,7 @@ public class MainWindow extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         jLDMUList = new javax.swing.JList();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        jLHolders = new javax.swing.JList();
         jLabel4 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
@@ -183,15 +185,14 @@ public class MainWindow extends javax.swing.JFrame {
         jLDMUList.setDragEnabled(true);
         jScrollPane4.setViewportView(jLDMUList);
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
+        jLHolders.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "NB8-90", "NB8-135", "NB10-90", "NB10-135", "NB20-90", "NB20-135" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jList1.setToolTipText("");
-        jList1.setDragEnabled(true);
-        jScrollPane3.setViewportView(jList1);
+        jLHolders.setToolTipText("");
+        jLHolders.setDragEnabled(true);
+        jScrollPane3.setViewportView(jLHolders);
 
         jLabel4.setText("Hållare");
 
@@ -355,11 +356,11 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JList jLDMUList;
+    private javax.swing.JList jLHolders;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
