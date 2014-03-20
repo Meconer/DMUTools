@@ -81,7 +81,7 @@ class TmHandler extends TransferHandler {
 
     private void readFile(File fileToRead, JTextArea component) {
         try {
-            try (BufferedReader reader = Files.newBufferedReader( fileToRead.toPath() , Charset.defaultCharset())) {
+            try (BufferedReader reader = Files.newBufferedReader( fileToRead.toPath() , Charset.forName("ISO_8859_1" ))) {
                 String line;
                 while (( line = reader.readLine()) != null ) {
                     component.append(line + "\n");
