@@ -95,9 +95,13 @@ class TmLine {
     String getLine() {
         line = "P" + placeNo +
                " T" + toolNo + 
-               " L" + lValue +
-               " R" + rValue + 
-               " " + comment;
+               " L" + lValue;
+        if (rValue == null ) {
+            line += " " + comment;
+        } else {
+            line += " R" + rValue + " " + comment;
+
+        }
                
         return line;
     }
