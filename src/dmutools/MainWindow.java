@@ -19,6 +19,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.DropMode;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -77,6 +78,7 @@ public class MainWindow extends javax.swing.JFrame {
         jTAOrigTm = new javax.swing.JTextArea();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jCbIgnoreR = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -150,6 +152,8 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        jCbIgnoreR.setText("Ignorera R");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -159,7 +163,9 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(156, 156, 156)
+                        .addGap(30, 30, 30)
+                        .addComponent(jCbIgnoreR)
+                        .addGap(45, 45, 45)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -174,7 +180,8 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton3)
-                        .addComponent(jButton4)))
+                        .addComponent(jButton4)
+                        .addComponent(jCbIgnoreR)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
                 .addContainerGap())
@@ -355,6 +362,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JCheckBox jCbIgnoreR;
     private javax.swing.JList jLDMUList;
     private javax.swing.JList jLHolders;
     private javax.swing.JLabel jLabel1;
@@ -457,15 +465,16 @@ public class MainWindow extends javax.swing.JFrame {
             String lValue = tmLine.readLValue();
             String rValue = tmLine.readRValue();
             System.out.println("TNo " + toolNo + "  LVal " + lValue + "  RVal " + rValue );
-            replaceTmValues( origTmList, toolNo, lValue, rValue );
+            replaceTmValues( origTmList, toolNo, lValue, rValue, jCbIgnoreR.isSelected() );
         }
         setOrigTmTA(origTmList);
     }
 
-    private void replaceTmValues(ArrayList<String> origTmList, int toolNo, String lValue, String rValue) {
+    private void replaceTmValues(ArrayList<String> origTmList, int toolNo, String lValue, String rValue, boolean ignoreR ) {
         for ( int i = 0 ; i < origTmList.size() ; i++ ) {
             String line = origTmList.get(i);
             TmLine tmLine = new TmLine(line);
+            if ( ignoreR ) rValue = tmLine.rValue;
             if ( toolNo == tmLine.readToolNo()) {
                 tmLine.setLValue(lValue);
                 tmLine.setRValue(rValue);
@@ -533,5 +542,6 @@ public class MainWindow extends javax.swing.JFrame {
             measuredTmList.add(line);
         }
     }
+
 
 }
