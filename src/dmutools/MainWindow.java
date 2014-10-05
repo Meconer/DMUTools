@@ -464,17 +464,24 @@ public class MainWindow extends javax.swing.JFrame {
             int toolNo = tmLine.readToolNo();
             String lValue = tmLine.readLValue();
             String rValue = tmLine.readRValue();
+            boolean hasRValue = tmLine.hasRValue();
             System.out.println("TNo " + toolNo + "  LVal " + lValue + "  RVal " + rValue );
-            replaceTmValues( origTmList, toolNo, lValue, rValue, jCbIgnoreR.isSelected() );
+            replaceTmValues( origTmList, toolNo, lValue, rValue, jCbIgnoreR.isSelected(), hasRValue );
         }
         setOrigTmTA(origTmList);
     }
 
-    private void replaceTmValues(ArrayList<String> origTmList, int toolNo, String lValue, String rValue, boolean ignoreR ) {
+    private void replaceTmValues(ArrayList<String> origTmList, int toolNo, String lValue, String rValue, boolean ignoreR, boolean hasRValue ) {
         for ( int i = 0 ; i < origTmList.size() ; i++ ) {
             String line = origTmList.get(i);
             TmLine tmLine = new TmLine(line);
-            if ( ignoreR ) rValue = tmLine.rValue;
+            if ( ignoreR ) {
+                if ( tmLine.hasRValue() ) {
+                    rValue = tmLine.rValue;
+                } else {
+                    rValue = null;
+                }
+            }
             if ( toolNo == tmLine.readToolNo()) {
                 tmLine.setLValue(lValue);
                 tmLine.setRValue(rValue);

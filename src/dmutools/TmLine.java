@@ -118,5 +118,9 @@ class TmLine {
         }
         return "";
     }
+
+    boolean hasRValue() {
+        return rValue != null;
+    }
     
 }
