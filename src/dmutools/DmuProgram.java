@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -27,13 +29,20 @@ import javax.swing.JTextArea;
 public class DmuProgram {
     DefaultListModel<String> programLines;
     Set<Integer> toolSet = new LinkedHashSet<>();
-    
+    private Path currentDir = null;
+
 
     public DmuProgram() {
         programLines = new DefaultListModel<>();
     }
     
+    public Path getCurrentDir() {
+        return currentDir;
+    }
+    
+
     public void readFile(File fileToRead){
+        setCurrentDir( fileToRead );
         programLines.clear();
         try {
             try (BufferedReader reader = Files.newBufferedReader( fileToRead.toPath() , Charset.forName("ISO_8859_1"))) {
@@ -102,6 +111,14 @@ public class DmuProgram {
     // Returns true if number is odd.
     private boolean isOdd(int n) {
         return   n % 2 != 0 ;
+    }
+
+    private void setCurrentDir(File fileToRead) {
+        currentDir = Paths.get( fileToRead.getAbsolutePath() ).getParent();
+    }
+
+    boolean hasFile() {
+        return currentDir != null;
     }
     
 
