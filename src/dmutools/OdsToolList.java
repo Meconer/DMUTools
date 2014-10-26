@@ -29,23 +29,29 @@ public class OdsToolList {
     void createOdsToolList(String tmText) {
         toolList = new ArrayList<>();
         final String COMMENT_REGEX = "(.*)\\((.*)\\).*";
-        Scanner scanner = new Scanner(tmText);
-        while ( scanner.hasNext() ) {
+        Scanner lineScanner = new Scanner(tmText);
+        while ( lineScanner.hasNext() ) {
             OdsTool odsTool = new OdsTool();
             toolList.add(odsTool);
-            String line = scanner.nextLine();
+            String line = lineScanner.nextLine().trim();
             Pattern commentPattern = Pattern.compile( COMMENT_REGEX);
-            Matcher m = commentPattern.matcher(line);
-            if ( m.matches() ) {
-                String comment = m.group(2);
+            Matcher mC = commentPattern.matcher(line);
+            if ( mC.matches() ) {
+                String comment = mC.group(2);
                 
                 System.out.println( comment );
                 odsTool.setComment( comment );
-                line = m.group(1);
+                line = mC.group(1).trim();
             }
             
-            System.out.println(line);
-                   
+            final String TOOL_LIST_REGEX = "P(\\d+) T(\\d+) L([0-9]*\\.?[0-9]+)( R([-+]?[0-9]*\\.?[0-9]+))?" ; //( R([0-9]*\\.?]0-9]+))?";
+            Pattern toolListPattern = Pattern.compile(TOOL_LIST_REGEX);
+            Matcher mT = toolListPattern.matcher(line);
+            if ( mT.matches() ) {
+                for ( int i = 0 ; i <= mT.groupCount() ; i++ ) {
+                    System.out.println(i + " : " + mT.group(i) );
+                }
+            } else System.out.println( line + ":Matchar ej");
             
         }
     }
