@@ -16,6 +16,7 @@ class OdsTool {
     private String length = "";
     private String radius = "";
     private String comment = "";
+    private String holderName = "";
 
     public int getToolNo() {
         return toolNo;
@@ -39,6 +40,7 @@ class OdsTool {
 
     public void setLength(String length) {
         this.length = length;
+        if ( length == null ) this.length = "";
     }
 
     public String getRadius() {
@@ -47,6 +49,7 @@ class OdsTool {
 
     public void setRadius(String radius) {
         this.radius = radius;
+        if ( radius == null ) this.radius = "";
     }
 
     public String getComment() {
@@ -55,5 +58,15 @@ class OdsTool {
 
     public void setComment(String comment) {
         this.comment = comment;
+        if ( comment == null ) this.comment = "";
+    }
+
+    void setHolderName(String holderName ) {
+        this.holderName = holderName;
+        if ( holderName == null ) this.holderName = "";
+    }
+    
+    public String getHolderName() {
+        return holderName;
     }
 }
