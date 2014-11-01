@@ -6,7 +6,6 @@
 
 package dmutools;
 
-import java.awt.FileDialog;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import javax.swing.DropMode;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -35,8 +33,6 @@ public class MainWindow extends javax.swing.JFrame {
     DmuProgram dmuProgram = new DmuProgram();
     ArrayList<String> measuredTmList;
     ArrayList<String> origTmList;
-    private static String DEFAULT_FILENAME = "VLIST.ODS";
-    
     
 
 
@@ -95,6 +91,7 @@ public class MainWindow extends javax.swing.JFrame {
         jBtnCreateFromProgram = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jBtnCreateOdsToolList = new javax.swing.JButton();
+        jBtnShowSettings = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -283,13 +280,22 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        jBtnShowSettings.setText("Inställningar");
+        jBtnShowSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnShowSettingsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jBtnCreateOdsToolList)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jBtnCreateOdsToolList)
+                    .addComponent(jBtnShowSettings))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -297,7 +303,9 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jBtnCreateOdsToolList)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jBtnShowSettings)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -363,6 +371,10 @@ public class MainWindow extends javax.swing.JFrame {
         createOdsToolList();
     }//GEN-LAST:event_jBtnCreateOdsToolListActionPerformed
 
+    private void jBtnShowSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnShowSettingsActionPerformed
+        DMUPreferences.getInstance().showPrefDialog();
+    }//GEN-LAST:event_jBtnShowSettingsActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -396,6 +408,7 @@ public class MainWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBtnCreateFromProgram;
     private javax.swing.JButton jBtnCreateOdsToolList;
+    private javax.swing.JButton jBtnShowSettings;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -476,18 +489,6 @@ public class MainWindow extends javax.swing.JFrame {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-    }
-
-    private void openOrigTm() {
-        JFileChooser jfc = new JFileChooser();
-        int jfcResult = jfc.showOpenDialog(null);
-        if (jfcResult == JFileChooser.APPROVE_OPTION) {
-            origTmList = readTmFile(jfc.getSelectedFile());
-            for ( String line : origTmList) {
-                jTAOrigTm.append(line + "\n");
-            }
-        }
-
     }
 
     private void createTmFromProgram() {
