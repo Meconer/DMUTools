@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -107,6 +109,8 @@ public class OdsToolList {
         sheet.getCellAt( 0, 4 ).setValue(name);
         sheet.getCellAt( 0, 5 ).setValue(artNo);
 
+        // Fyll i verktygslistan men sortera den först.
+        Collections.sort(toolList );
         int currentOdsLine = 15;
         Iterator<OdsTool> iterator = toolList.iterator();
         while ( iterator.hasNext() ) {

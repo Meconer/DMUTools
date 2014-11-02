@@ -10,7 +10,7 @@ package dmutools;
  *
  * @author mats
  */
-class OdsTool {
+class OdsTool implements Comparable<OdsTool>{
     private int toolNo = 0;
     private int placeNo = 0;
     private String length = "";
@@ -69,4 +69,13 @@ class OdsTool {
     public String getHolderName() {
         return holderName;
     }
+
+    @Override
+    public int compareTo(OdsTool toolToCompare) {
+        int compToolNo = toolToCompare.getToolNo();
+        return ( compToolNo > toolNo ) ? -1 : 
+               ( compToolNo == toolNo ) ? 0 : 1;
+    }
+
+
 }
