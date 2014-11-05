@@ -93,21 +93,21 @@ public class OdsToolList {
         Path path = odsToolListFile.getAbsoluteFile().toPath();
         int level = path.getNameCount();
         String customerName = path.getName(level - 5 ).toString();
-        sheet.getCellAt(0,3).setValue(customerName);
+        sheet.getCellAt(5,3).setValue(customerName);
 
         // och så artikelnummer och benämning. Artikelnummer är det först "ordet" i pathnivå level - 4
         String pathLevelm4 = path.getName(level -4 ).toString();
         int posOfFirstSpace = pathLevelm4.indexOf(" ");
         String artNo = "";
-        String name = "";
+        String name;
         if ( posOfFirstSpace > 0 ) {
             artNo = pathLevelm4.substring( 0, posOfFirstSpace );
             name = pathLevelm4.substring(posOfFirstSpace + 1 , pathLevelm4.length() );
         } else {
             name = pathLevelm4;
         }
-        sheet.getCellAt( 0, 4 ).setValue(name);
-        sheet.getCellAt( 0, 5 ).setValue(artNo);
+        sheet.getCellAt( 5, 4 ).setValue(name);
+        sheet.getCellAt( 5, 5 ).setValue(artNo);
 
         // Fyll i verktygslistan men sortera den först.
         Collections.sort(toolList );
