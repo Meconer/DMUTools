@@ -501,9 +501,9 @@ public class MainWindow extends javax.swing.JFrame {
         if ( measuredTmList == null ) return;
         for ( String line : measuredTmList ) {
             TmLine tmLine = new TmLine( line );
-            int toolNo = tmLine.readToolNo();
-            String lValue = tmLine.readLValue();
-            String rValue = tmLine.readRValue();
+            int toolNo = tmLine.getToolNo();
+            String lValue = tmLine.getLValue();
+            String rValue = tmLine.getRValue();
             boolean hasRValue = tmLine.hasRValue();
             System.out.println("TNo " + toolNo + "  LVal " + lValue + "  RVal " + rValue );
             replaceTmValues( origTmList, toolNo, lValue, rValue, jCbIgnoreR.isSelected(), hasRValue );
@@ -522,7 +522,7 @@ public class MainWindow extends javax.swing.JFrame {
                     rValue = null;
                 }
             }
-            if ( toolNo == tmLine.readToolNo()) {
+            if ( toolNo == tmLine.getToolNo()) {
                 tmLine.setLValue(lValue);
                 tmLine.setRValue(rValue);
                 line = tmLine.getLine();

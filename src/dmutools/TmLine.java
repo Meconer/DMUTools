@@ -14,11 +14,36 @@ import java.util.regex.Pattern;
  * @author mats
  */
 class TmLine {
+
+    public int getPlaceNo() {
+        return placeNo;
+    }
+
+    public int getToolNo() {
+        return toolNo;
+    }
+
+    public String getLValue() {
+        return lValue;
+    }
+
+    public String getRValue() {
+        return rValue;
+    }
+
+    public Boolean getHasR() {
+        return hasR;
+    }
+
+    public String getComment() {
+        return comment;
+    }
     String line;
     int placeNo;
     int toolNo;
     String lValue;
     String rValue;
+    Boolean hasR;
     String comment;
 
     TmLine(String line) {
@@ -30,7 +55,7 @@ class TmLine {
         readComment();
     }
 
-    int readToolNo() {
+    private int readToolNo() {
         if (line == null ) return -1;
         final String toolMatch = "T(\\d+)";
         Pattern p = Pattern.compile(toolMatch);
@@ -44,7 +69,7 @@ class TmLine {
         
     }
 
-    int readPlaceNo() {
+    private int readPlaceNo() {
         if (line == null ) return -1;
         final String placeMatch = "P(\\d+)";
         Pattern p = Pattern.compile(placeMatch);
@@ -58,7 +83,7 @@ class TmLine {
         
     }
 
-    String readLValue() {
+    private String readLValue() {
         if (line == null ) return null;
         final String lValMatch = "L(\\d+\\.*\\d*)";
         Pattern p = Pattern.compile(lValMatch);
@@ -71,15 +96,17 @@ class TmLine {
 
     }
 
-    String readRValue() {
+    private String readRValue() {
         if (line == null ) return null;
         final String rValMatch = "R(\\d+\\.*\\d*)";
         Pattern p = Pattern.compile(rValMatch);
         Matcher m = p.matcher(line);
         if (m.find()) {
             rValue = m.group(1).trim();
+            hasR = true;
             return rValue;
         }
+        hasR = false;
         return null;
 
     }
@@ -106,7 +133,7 @@ class TmLine {
         return line;
     }
 
-    public String readComment() {
+    private String readComment() {
         comment = "";
         if (line == null ) return "";
         final String commentMatch = "(\\(.*\\))";
