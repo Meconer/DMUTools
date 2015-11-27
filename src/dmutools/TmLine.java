@@ -98,7 +98,7 @@ class TmLine {
 
     private String readRValue() {
         if (line == null ) return null;
-        final String rValMatch = "R(\\d+\\.*\\d*)";
+        final String rValMatch = "R([+-]?\\d+\\.?\\d*)";
         Pattern p = Pattern.compile(rValMatch);
         Matcher m = p.matcher(line);
         if (m.find()) {
