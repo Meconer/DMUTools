@@ -28,7 +28,7 @@ import javax.swing.JTextArea;
  */
 public class DmuProgram {
     DefaultListModel<String> programLines;
-    Set<Integer> toolSet = new LinkedHashSet<>();
+    Set<DMUTool> toolSet = new LinkedHashSet<>();
     private Path currentDir = null;
 
 
@@ -53,7 +53,8 @@ public class DmuProgram {
                     String tool = extractTool(line);
                     if (tool != null ) {
                         programLines.add( programLines.size(), tool );
-                        toolSet.add(Integer.parseInt(tool.substring(1)));
+                        DMUTool dmuTool = new DMUTool(Integer.parseInt(tool.substring(1)));
+                        toolSet.add(dmuTool);
                     }
                 }
             }
@@ -81,10 +82,9 @@ public class DmuProgram {
     }
 
     void appendToolListFromProgramEvents(JTextArea textArea) {
-        int counter = 1;
-        for ( int toolNo : toolSet ) {
-            textArea.append("P" + toolNumberToPlaceNumber(counter) + " T" + toolNo + " L0 R0 \n") ;
-            counter++;
+        for ( DMUTool dmuTool : toolSet ) {
+            int toolNo = dmuTool.getToolNo();
+            textArea.append("P" + toolNumberToPlaceNumber(toolNo) + " T" + toolNo + " L0 R0 \n") ;
         }
     }
 
