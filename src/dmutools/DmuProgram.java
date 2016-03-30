@@ -47,14 +47,36 @@ public class DmuProgram {
         try {
             try (BufferedReader reader = Files.newBufferedReader( fileToRead.toPath() , Charset.forName("ISO_8859_1"))) {
                 String line;
+                
+                Pattern toolCommentPattern = Pattern.compile("\\(\\* T(\\d+) (.*)\\)");
                 while (( line = reader.readLine()) != null ) {
                     String comment = extractComment(line);
-                    if (comment != null ) programLines.add( programLines.size(), comment );
+                    if (comment != null ) { 
+                        programLines.add( programLines.size(), comment );
+                        if ( comment.startsWith("(* T")) {
+                            // This is a tool comment
+                            Matcher m = toolCommentPattern.matcher(comment);
+                            if ( m.find() ) {
+                                int toolNo = Integer.parseInt( m.group(1) );
+                                String toolComment = m.group(2);
+                                DMUTool dmuTool = new DMUTool(toolNo, 0, 0, toolComment);
+                                if ( !toolNoExist(toolNo) ) {
+                                    toolSet.add(dmuTool);
+                                } else {
+                                    changeTool( dmuTool );
+                                }
+                            }
+                            
+                        }
+                    }
                     String tool = extractTool(line);
                     if (tool != null ) {
                         programLines.add( programLines.size(), tool );
-                        DMUTool dmuTool = new DMUTool(Integer.parseInt(tool.substring(1)));
-                        toolSet.add(dmuTool);
+                        int toolNo = Integer.parseInt(tool.substring(1));
+                        if ( !toolNoExist( toolNo ) ) {
+                            DMUTool dmuTool = new DMUTool(Integer.parseInt(tool.substring(1)));
+                            toolSet.add(dmuTool);
+                        }
                     }
                 }
             }
@@ -84,7 +106,9 @@ public class DmuProgram {
     void appendToolListFromProgramEvents(JTextArea textArea) {
         for ( DMUTool dmuTool : toolSet ) {
             int toolNo = dmuTool.getToolNo();
-            textArea.append("P" + toolNumberToPlaceNumber(toolNo) + " T" + toolNo + " L0 R0 \n") ;
+            String s = "P" + toolNumberToPlaceNumber(toolNo) + " T" + toolNo + " L0 R0 " +
+                    "(" + dmuTool.getToolName() + ")\n";
+            textArea.append(s) ;
         }
     }
 
@@ -119,6 +143,25 @@ public class DmuProgram {
 
     boolean hasFile() {
         return currentDir != null;
+    }
+
+    private boolean toolNoExist(int toolNo) {
+        for ( DMUTool dt : toolSet ) {
+            if ( dt.getToolNo() == toolNo ) return true;
+        }
+        return false;
+    }
+
+    private void changeTool(DMUTool dmuTool) {
+        
+        int toolNo = dmuTool.getToolNo();
+        for ( DMUTool dt : toolSet ) {
+            if ( dt.getToolNo() == toolNo ) {
+                dt.setToolLength(dmuTool.getToolLength());
+                dt.setToolRadius(dmuTool.getToolRadius());
+                dt.setToolName(dmuTool.getToolName());
+            }
+        }
     }
     
 
