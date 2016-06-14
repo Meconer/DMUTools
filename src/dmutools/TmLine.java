@@ -59,7 +59,7 @@ class TmLine {
         if (line == null ) return -1;
         final String toolMatch = "T(\\d+)";
         Pattern p = Pattern.compile(toolMatch);
-        Matcher m = p.matcher(line);
+        Matcher m = p.matcher(lineWithoutComment());
         if (m.find()) {
             String toolString = m.group(1).trim();
             toolNo = Integer.parseInt(toolString);
@@ -73,7 +73,7 @@ class TmLine {
         if (line == null ) return -1;
         final String placeMatch = "P(\\d+)";
         Pattern p = Pattern.compile(placeMatch);
-        Matcher m = p.matcher(line);
+        Matcher m = p.matcher(lineWithoutComment());
         if (m.find()) {
             String placeString = m.group(1).trim();
             placeNo = Integer.parseInt(placeString);
@@ -87,7 +87,7 @@ class TmLine {
         if (line == null ) return null;
         final String lValMatch = "L(\\d+\\.*\\d*)";
         Pattern p = Pattern.compile(lValMatch);
-        Matcher m = p.matcher(line);
+        Matcher m = p.matcher(lineWithoutComment());
         if (m.find()) {
             lValue = m.group(1).trim();
             return lValue;
@@ -100,7 +100,8 @@ class TmLine {
         if (line == null ) return null;
         final String rValMatch = "R([+-]?\\d+\\.?\\d*)";
         Pattern p = Pattern.compile(rValMatch);
-        Matcher m = p.matcher(line);
+        String lineWoutComment = lineWithoutComment();
+        Matcher m = p.matcher(lineWoutComment);
         if (m.find()) {
             rValue = m.group(1).trim();
             hasR = true;
@@ -109,6 +110,11 @@ class TmLine {
         hasR = false;
         return null;
 
+    }
+
+    private String lineWithoutComment() {
+        String lineWithoutComment = line.replaceAll("\\(.*\\)", "");
+        return lineWithoutComment;
     }
 
     void setLValue(String lValue) {
